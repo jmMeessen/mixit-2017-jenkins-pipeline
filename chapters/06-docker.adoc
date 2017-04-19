@@ -4,25 +4,76 @@ to the Rescue
 
 == Docker: Why ?
 
+image::./images/the-matrix-from-hell.png[]
+
 == Docker: What ?
+
+image::./images/container_vs_vm.jpg[]
 
 == Docker How ?
 
+image::./images/docker-how.png[]
+
 == Docker: Dockerfile
 
-* Dockerfile: recipe
-* Use Gitserver
+* `Dockerfile`: recipe for building your *immutable* image
+
+[source,subs="attributes",bash]
+----
+FROM debian:jessie
+LABEL Maintainer="Damien DUPORTAL"
+
+RUN apt-get update && apt-get install -y nginx
+
+VOLUME ["/tmp","/app"]
+
+EXPOSE 80
+
+ENTRYPOINT ["/usr/sbin/nginx"]
+CMD ["-g","daemon off;"]
+----
 
 == Docker: Building Docker Image
 
-* Devbox
-* docker images
-* docker build
-* docker images
+* Using the `docker` CLI:
+
+[source,subs="attributes",bash]
+----
+docker build -t my_image:1.0.0 ./
+----
+
+
+== Docker: Running a Docker
+
+* Using the `docker` CLI:
+
+[source,subs="attributes",bash]
+----
+docker run -P -d my_image:1.0.0
+----
+
+== Docker: Demo Application's Dockerfile
+
+* Using *GitServer*, from the repository root
+** Check the `Dockerfile` content
+
+== Docker: Building Demo Application
+
+* Using *Devbox*, from the local repository root
+** Checking images with `docker images`
+** Build an image named `demoapp:latest`
+** Check again images
 
 == Docker: Running Docker Container
 
-* Devbox
-* docker run
-* docker ps
-* Access App
+* Using *Devbox*, from the local repository root
+** Check running containers with `docker ps`
+** Run the image with this command:
++
+[source,subs="attributes",bash]
+----
+docker run -p 8080:8080 -d my_image:1.0.0
+----
+
+** Test it
+** Stop it with `docker stop <Container ID>`
