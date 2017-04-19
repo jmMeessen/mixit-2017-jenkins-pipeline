@@ -37,12 +37,10 @@ include::chapters/06-docker.adoc[]
 
 include::chapters/07-cd.adoc[]
 
-include::chapters/08-improving-our-pipeline.adoc[]
-
 :leveloffset: -1
 
 
-== Thank You
+== Thank You !
 
 * Mix-IT organization
 * CloudBees and Jenkins Community

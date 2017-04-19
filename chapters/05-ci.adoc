@@ -1,7 +1,9 @@
 
 = Continuous Integration with Jenkins
 
-== Continuous Integration: Why ?
+aka "CI"
+
+== CI: Why ?
 
 image::./images/big-bugs.jpg[caption="Big Bugs",width=500,link=http://cartoontester.blogspot.be/2010/01/big-bugs.html]
 
@@ -11,7 +13,7 @@ Continuous Integration doesn’t get rid of bugs, but it does make them
 dramatically easier to find and remove.
 ____
 
-== Continuous Integration: What ?
+== CI: What ?
 
 [quote, Martin Fowler - Continuous Integration]
 ____
@@ -21,7 +23,7 @@ usually each person integrates at least daily,
 leading to *multiple* integrations per day.
 ____
 
-== Continuous Integration: How ?
+== CI: How ?
 
 * Each integration is verified by an *automated* build (including test)
 * Integrate code *often*, at least daily, to make integration a *non-event*
@@ -31,20 +33,20 @@ image::./images/ci-howto.png[caption=CI,width=400]
 
 == Continuous Integration with Jenkins
 
-== Continuous Integration: Accessing Jenkins
+== CI: Accessing Jenkins
 
 * Access your Jenkins instance:
 ** link:http://localhost:10000/jenkins[]
 ** *Log in*  as the user *`butler`* (password is the same)
 ** It is the "Legacy UI"
 
-== Continuous Integration: Jenkins BlueOcean
+== CI: Jenkins BlueOcean
 
 * Switch to BlueOcean, the new UI
 ** Direct link: link:http://localhost:10000/jenkins/blue[]
 ** _Or_ click on the top button "Open Blue Ocean"
 
-== Continuous Integration: Creating Project
+== CI: Creating Project
 
 * Create your 1st Pipeline:
 ** Stored in *Git*
@@ -53,14 +55,14 @@ image::./images/ci-howto.png[caption=CI,width=400]
 ** Add a *User/password* credential
 *** `butler` / same for password
 
-== Continuous Integration: Fast feedback with Webhooks
+== CI: Fast feedback with Webhooks
 
 * We want *Fast feedback* !
 ** Pushed code to repository ? Tell Jenkins to build it *now*
 * Let's add a *Webhook* to the repository
 ** HTTP request *Gitserver* -> *Jenkins*
 
-== Continuous Integration: Add a Gogs Webhooks
+== CI: Add a Gogs Webhooks
 
 * From repo. in *Gitserver* -> *Settings* -> *Webhooks*
 ** Direct link: http://localhost:10000/gitserver/butler/demoapp/settings/hooks
@@ -68,7 +70,7 @@ image::./images/ci-howto.png[caption=CI,width=400]
 ** Payload URL: link:http://localhost:10000/jenkins/job/demoapp/build?delay=0[]
 ** When should this webhook be triggered?: *I need everything*
 
-== Continuous Integration: Starting with Pipelines
+== CI: Starting with Pipelines
 
 * Pipeline-as-code: We need a `Jenkinsfile`
 ** *Declarative* or *Scripted* ?
@@ -78,7 +80,7 @@ image::./images/ci-howto.png[caption=CI,width=400]
 ** Getting Started: link:https://jenkins.io/doc/pipeline/tour/hello-world/[]
 ** Syntax Reference: link:https://jenkins.io/doc/book/pipeline/syntax/[]
 
-== Continuous Integration: BlueOcean Pipeline Editor
+== CI: BlueOcean Pipeline Editor
 
 * Provides the *full* round trip with SCM
 * No Pipeline ? Follow the wizard (not Gandalf fool !)
@@ -88,7 +90,7 @@ image::./images/ci-howto.png[caption=CI,width=400]
 ** Only Github with BO 1.0.1
 ** Interested ? *Open-Source*: Contribute !
 
-== Continuous Integration: Use the Pipeline Editor
+== CI: Use the Pipeline Editor
 
 * Let's *hack*: open the *BlueOcean Pipeline Editor*
 ** Direct (hidden) URL:
@@ -98,7 +100,7 @@ link:http://localhost:10000/jenkins/blue/organizations/jenkins/pipeline-editor/[
 * Use also the Legacy Pipeline Syntax Snippet Generator:
 ** link:http://localhost:10000/jenkins/job/demoapp/pipeline-syntax/[]
 
-== Continuous Integration: Exercise - Your First Pipeline
+== CI: Exercise - Your First Pipeline
 
 * Use the BO editor and *Gitserver*
 * Create a Pipeline that have a single stage "Hello"
@@ -107,7 +109,7 @@ link:http://localhost:10000/jenkins/blue/organizations/jenkins/pipeline-editor/[
 * A build will kick off immediately:
 ** link:http://localhost:10000/jenkins/blue/organizations/jenkins/demoapp/activity[demoapp Activity Dashboard]
 
-== Continuous Integration: Solution - Your first pipeline
+== CI: Solution - Your first pipeline
 
 [source,subs="attributes",java]
 ----
@@ -123,14 +125,14 @@ pipeline {
 }
 ----
 
-== Continuous Integration: Exercise - Simple Build Pipeline
+== CI: Exercise - Simple Build Pipeline
 
 * Exercise: Implement a simple build pipeline demoapp
 * We want 4 stages, for the 4 Maven goals:
 ** `clean compile`, `test`, `package`, `verify`
 * We need to build on the `maven` agent
 
-== Continuous Integration: Solution - Simple Build Pipeline
+== CI: Solution - Simple Build Pipeline
 
 [source,subs="attributes",java]
 ----
@@ -165,7 +167,7 @@ pipeline {
 }
 ----
 
-== Continuous Integration: Exercise - Artifacts
+== CI: Exercise - Artifacts
 
 * We want to simplify to 2 stages, based on Unit Tests definition:
 ** `Build`: compile, unit test and package the application
@@ -177,7 +179,7 @@ pipeline {
 * _Clues_: Keywords `post` + `success` (not in Editor),
 and `archiveArtifacts`
 
-== Continuous Integration: Solution - Artifacts
+== CI: Solution - Artifacts
 
 
 [source,subs="attributes",java]
@@ -208,7 +210,7 @@ pipeline {
 }
 ----
 
-== Continuous Integration: Exercise - Integration Tests Reports
+== CI: Exercise - Integration Tests Reports
 
 * We want the integration test reports to be published to Jenkins
 ** *Better* feedback loop
@@ -220,7 +222,7 @@ pipeline {
 ** Maven flag `-fn` ("Fails Never")
 ** keyword `junit` (Pipeline keyword)
 
-== Continuous Integration: Solution - Integration Tests Reports
+== CI: Solution - Integration Tests Reports
 
 [source,subs="attributes",java]
 ----
@@ -251,7 +253,7 @@ pipeline {
 }
 ----
 
-== Continuous Integration: Exercise - All Tests Reports
+== CI: Exercise - All Tests Reports
 
 * We now want *all* test reports published
 ** *Problem:* how to handle Unit test failure ?
@@ -261,7 +263,7 @@ unstable *only* due to the `Verify` stage
 
 * _Clues_: `post` can be used per stage
 
-== Continuous Integration: Solution - All Tests Reports
+== CI: Solution - All Tests Reports
 
 [source,subs="attributes",java]
 ----
@@ -303,7 +305,7 @@ pipeline {
 }
 ----
 
-== Continuous Integration: Failing Tests
+== CI: Failing Tests
 
 * Validate your changes by making your tests fails.
 * Edit each one and uncomment the failing block:
