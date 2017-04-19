@@ -113,7 +113,7 @@ ls -l ./target
 ** Compile Unit Test classes
 ** Run Unit Test
 
-* Tests Reports put in the *`./target/surefire-plugin`* folder:
+* Tests Reports put in the *`./target/surefire-reports`* folder:
 +
 [source,subs="attributes",bash]
 ----
@@ -163,7 +163,7 @@ image::./images/test-integration.gif[height=300,float=right]
 ** Call `compile`, `test` and `package`
 ** Run Tests against the *packaged* application
 
-* Tests Reports put in the *`./target/failsafe-plugin`* folder:
+* Tests Reports put in the *`./target/failsafe-reports`* folder:
 +
 [source,subs="attributes",bash]
 ----

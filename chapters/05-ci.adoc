@@ -3,37 +3,259 @@
 
 == Continuous Integration: Why ?
 
+image::./images/big-bugs.jpg[caption="Big Bugs",width=500,link=http://cartoontester.blogspot.be/2010/01/big-bugs.html]
+
+[quote, Martin Fowler]
+____
+Continuous Integration doesn’t get rid of bugs, but it does make them
+dramatically easier to find and remove.
+____
+
 == Continuous Integration: What ?
+
+[quote, Martin Fowler - Continuous Integration]
+____
+Continuous Integration is a software development *practice* where members
+of a team integrate their work *frequently*,
+usually each person integrates at least daily,
+leading to *multiple* integrations per day.
+____
 
 == Continuous Integration: How ?
 
+* Each integration is verified by an *automated* build (including test)
+* Integrate code *often*, at least daily, to make integration a *non-event*
+* *Continuously* build and integrate, with a *feedback loop*
+
+image::./images/ci-howto.png[caption=CI,width=400]
+
+== Continuous Integration with Jenkins
+
 == Continuous Integration: Accessing Jenkins
 
-* Jenkins
-* Log in butler/butler
-* BlueOcean
+* Access your Jenkins instance:
+** link:http://localhost:10000/jenkins[]
+** *Log in*  as the user *`butler`* (password is the same)
+** It is the "Legacy UI"
+
+== Continuous Integration: Jenkins BlueOcean
+
+* Switch to BlueOcean, the new UI
+** Direct link: link:http://localhost:10000/jenkins/blue[]
+** _Or_ click on the top button "Open Blue Ocean"
 
 == Continuous Integration: Creating Project
 
-* Create BO project
-* Configure Webhook on gogs
-* Go back to BO, check empty
-* Check with legacy GUI
-* Reference to jenkins.io documentation
+* Create your 1st Pipeline:
+** Stored in *Git*
+** Fetch URL from the *Gitserver*
+*** Direct link: link:http://localhost:10000/gitserver/butler/demoapp.git[]
+** Add a *User/password* credential
+*** `butler` / same for password
+
+== Continuous Integration: Fast feedback with Webhooks
+
+* We want *Fast feedback* !
+** Pushed code to repository ? Tell Jenkins to build it *now*
+* Let's add a *Webhook* to the repository
+** HTTP request *Gitserver* -> *Jenkins*
+
+== Continuous Integration: Add a Gogs Webhooks
+
+* From repo. in *Gitserver* -> *Settings* -> *Webhooks*
+** Direct link: http://localhost:10000/gitserver/butler/demoapp/settings/hooks
+* Add a *Gogs* webhook:
+** Payload URL: link:http://localhost:10000/jenkins/job/demoapp/build?delay=0[]
+** When should this webhook be triggered?: *I need everything*
+
+== Continuous Integration: Starting with Pipelines
+
+* Pipeline-as-code: We need a `Jenkinsfile`
+** *Declarative* or *Scripted* ?
+
+* Where to start ?
+** Documentation: link:https://jenkins.io/doc/pipeline[]
+** Getting Started: link:https://jenkins.io/doc/pipeline/tour/hello-world/[]
+** Syntax Reference: link:https://jenkins.io/doc/book/pipeline/syntax/[]
 
 == Continuous Integration: BlueOcean Pipeline Editor
 
-* Open Pipeline Editor
-* Generate a stage hello world
-* Commit and push
-* See the first job
+* Provides the *full* round trip with SCM
+* No Pipeline ? Follow the wizard (not Gandalf fool !)
+* Already have a Pipeline ? Edit, commit, run it
 
-== Continuous Integration: Simple Build Pipeline
+* Needs a *compliant* SCM
+** Only Github with BO 1.0.1
+** Interested ? *Open-Source*: Contribute !
 
-* Create compile -> unit test -> package -> Integration test
-* Agent is the maven agent. Show it, and then label.
-* We want to archive Artefact
-* See 4 steps, with integration test failing
+== Continuous Integration: Use the Pipeline Editor
+
+* Let's *hack*: open the *BlueOcean Pipeline Editor*
+** Direct (hidden) URL:
+link:http://localhost:10000/jenkins/blue/organizations/jenkins/pipeline-editor/[]
+** Use `CTRL + S` (On Mac: `CMD +S`) to switch to textual version
+
+* Use also the Legacy Pipeline Syntax Snippet Generator:
+** link:http://localhost:10000/jenkins/job/demoapp/pipeline-syntax/[]
+
+== Continuous Integration: Exercise - Your First Pipeline
+
+* Use the BO editor and *Gitserver*
+* Create a Pipeline that have a single stage "Hello"
+* This stage have 1 step that prints the message "Hello World"
+* Copy/Paste this Pipeline in a new file `Jenkinsfile` on the repository root
+* A build will kick off immediately:
+** link:http://localhost:10000/jenkins/blue/organizations/jenkins/demoapp/activity[demoapp Activity Dashboard]
+
+== Continuous Integration: Solution - Your first pipeline
+
+[source,subs="attributes",java]
+----
+pipeline {
+  agent any
+  stages {
+    stage('Build') {
+      steps {
+        echo 'Hello World !'
+      }
+    }
+  }
+}
+----
+
+== Continuous Integration: Exercise - Simple Build Pipeline
+
+* Exercise: Implement a simple build pipeline demoapp
+* We want 4 stages, for the 4 Maven goals:
+** `clean compile`, `test`, `package`, `verify`
+* We need to build on the `maven` agent
+
+== Continuous Integration: Solution - Simple Build Pipeline
+
+[source,subs="attributes",java]
+----
+pipeline {
+  agent {
+    node {
+      label 'maven'
+    }
+  }
+  stages {
+    stage('Compile') {
+      steps {
+        sh 'mvn compile'
+      }
+    }
+    stage('Unit Tests') {
+      steps {
+        sh 'mvn test'
+      }
+    }
+    stage('Build') {
+      steps {
+        sh 'mvn package'
+      }
+    }
+    stage('Integration Tests') {
+      steps {
+        sh 'mvn verify'
+      }
+    }
+  }
+}
+----
+
+== Continuous Integration: Exercise - Artifacts
+
+* We want to simplify to 2 stages, based on Unit Tests definition:
+** `Build`: compile, unit test and package the application
+** `Verify`: Run Integration Tests
+
+* We also want to *archive* the generated `jar` file
+** Only if the build is in sucess
+
+* _Clues_: Keywords `post` + `success` (not in Editor),
+and `archiveArtifacts`
+
+== Continuous Integration: Solution - Artifacts
+
+
+[source,subs="attributes",java]
+----
+pipeline {
+  agent {
+    node {
+      label 'maven'
+    }
+  }
+  stages {
+    stage('Build') {
+      steps {
+        sh 'mvn clean compile test package'
+      }
+    }
+    stage('Integration Tests') {
+      steps {
+        sh 'mvn verify'
+      }
+    }
+  }
+  post {
+    success {
+      archiveArtifacts 'target/demoapp.jar'
+    }
+  }
+}
+----
+
+== Continuous Integration: Exercise - Integration Tests Reports
+
+* We want the integration test reports to be published to Jenkins
+** *Better* feedback loop
+
+* If Integration Tests are failing, do NOT fail the build
+** Make it *UNSTABLE* instead
+
+* _Clues_:
+** Maven flag `-fn` ("Fails Never")
+** keyword `junit` (Pipeline keyword)
+
+== Continuous Integration: Exercise - Tests Reports
+
+[source,subs="attributes",java]
+----
+pipeline {
+  agent {
+    node {
+      label 'maven'
+    }
+
+  }
+  stages {
+    stage('Compile') {
+      steps {
+        sh 'mvn compile'
+      }
+    }
+    stage('Unit Tests') {
+      steps {
+        sh 'mvn test'
+      }
+    }
+    stage('Build') {
+      steps {
+        sh 'mvn package'
+      }
+    }
+    stage('Integration Tests') {
+      steps {
+        sh 'mvn verify -fn'
+        junit '**/target/failsafe-reports/*.xml'
+      }
+    }
+  }
+}
+----
 
 == Continuous Integration: Test reports
 
