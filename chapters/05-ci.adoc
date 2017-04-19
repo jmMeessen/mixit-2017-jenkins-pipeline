@@ -220,7 +220,48 @@ pipeline {
 ** Maven flag `-fn` ("Fails Never")
 ** keyword `junit` (Pipeline keyword)
 
-== Continuous Integration: Exercise - Tests Reports
+== Continuous Integration: Solution - Integration Tests Reports
+
+[source,subs="attributes",java]
+----
+pipeline {
+  agent {
+    node {
+      label 'maven'
+    }
+  }
+  stages {
+    stage('Build') {
+      steps {
+        sh 'mvn clean compile test package'
+      }
+    }
+    stage('Integration Tests') {
+      steps {
+        sh 'mvn verify -fn'
+        junit '**/target/failsafe-reports/*.xml'
+      }
+    }
+  }
+  post {
+    success {
+      archiveArtifacts 'target/demoapp.jar'
+    }
+  }
+}
+----
+
+== Continuous Integration: Exercise - All Tests Reports
+
+* We now want *all* test reports published
+** *Problem:* how to handle Unit test failure ?
+
+* We also want to archive artifacts if build is
+unstable *only* due to the `Verify` stage
+
+* _Clues_: `post` can be used per stage
+
+== Continuous Integration: Solution - All Tests Reports
 
 [source,subs="attributes",java]
 ----
@@ -232,39 +273,44 @@ pipeline {
 
   }
   stages {
-    stage('Compile') {
-      steps {
-        sh 'mvn compile'
-      }
-    }
-    stage('Unit Tests') {
-      steps {
-        sh 'mvn test'
-      }
-    }
     stage('Build') {
       steps {
-        sh 'mvn package'
+        sh 'mvn clean compile test package'
       }
+    post {
+      always {
+      junit '**/target/surefire-reports/*.xml'
+    }
+    }
     }
     stage('Integration Tests') {
       steps {
         sh 'mvn verify -fn'
-        junit '**/target/failsafe-reports/*.xml'
+    junit '**/target/failsafe-reports/*.xml'
       }
+    post {
+    unstable {
+      archiveArtifacts 'target/demoapp.jar'
+    }
+    }
+    }
+  }
+  post {
+    success {
+      archiveArtifacts 'target/demoapp.jar'
     }
   }
 }
 ----
 
-== Continuous Integration: Test reports
+== Continuous Integration: Failing Tests
 
-* Sho the mvn "-fn" flag
-* Add the junit keyword
-* Show build going from "FAILED" to "UNSTABLE"
+* Validate your changes by making your tests fails.
+* Edit each one and uncomment the failing block:
+** Integration: `src/master/src/test/java/hello/ApplicationIT.java`
+** Unit Tests: `src/master/src/test/java/hello/ApplicationTest.java`
 
-== Continuous Integration: Correcting Tests
+* Browse the top-level items "Changes", "Tests" and "Artifacts"
+* Do *NOT* forget to correct your tests at the end
 
-* Make the build success
-** Check Tests
-** Edit IT code / commit
+== That's all folks !

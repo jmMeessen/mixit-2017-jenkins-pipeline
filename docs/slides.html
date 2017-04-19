@@ -94,27 +94,16 @@ and <code>archiveArtifacts</code></p></li></ul></div></section><section id="cont
       archiveArtifacts 'target/demoapp.jar'
     }
   }
-}</code></pre></div></div></section><section id="continuous_integration_exercise_integration_tests_reports"><h2>Continuous Integration: Exercise - Integration Tests Reports</h2><div class="ulist"><ul><li><p>We want the integration test reports to be published to Jenkins</p><div class="ulist"><ul><li><p><strong>Better</strong> feedback loop</p></li></ul></div></li><li><p>If Integration Tests are failing, do NOT fail the build</p><div class="ulist"><ul><li><p>Make it <strong>UNSTABLE</strong> instead</p></li></ul></div></li><li><p><em>Clues</em>:</p><div class="ulist"><ul><li><p>Maven flag <code>-fn</code> ("Fails Never")</p></li><li><p>keyword <code>junit</code> (Pipeline keyword)</p></li></ul></div></li></ul></div></section><section id="continuous_integration_exercise_tests_reports"><h2>Continuous Integration: Exercise - Tests Reports</h2><div class="listingblock"><div class="content"><pre class="highlight"><code>pipeline {
+}</code></pre></div></div></section><section id="continuous_integration_exercise_integration_tests_reports"><h2>Continuous Integration: Exercise - Integration Tests Reports</h2><div class="ulist"><ul><li><p>We want the integration test reports to be published to Jenkins</p><div class="ulist"><ul><li><p><strong>Better</strong> feedback loop</p></li></ul></div></li><li><p>If Integration Tests are failing, do NOT fail the build</p><div class="ulist"><ul><li><p>Make it <strong>UNSTABLE</strong> instead</p></li></ul></div></li><li><p><em>Clues</em>:</p><div class="ulist"><ul><li><p>Maven flag <code>-fn</code> ("Fails Never")</p></li><li><p>keyword <code>junit</code> (Pipeline keyword)</p></li></ul></div></li></ul></div></section><section id="continuous_integration_solution_integration_tests_reports"><h2>Continuous Integration: Solution - Integration Tests Reports</h2><div class="listingblock"><div class="content"><pre class="highlight"><code>pipeline {
   agent {
     node {
       label 'maven'
     }
-
   }
   stages {
-    stage('Compile') {
-      steps {
-        sh 'mvn compile'
-      }
-    }
-    stage('Unit Tests') {
-      steps {
-        sh 'mvn test'
-      }
-    }
     stage('Build') {
       steps {
-        sh 'mvn package'
+        sh 'mvn clean compile test package'
       }
     }
     stage('Integration Tests') {
@@ -124,7 +113,48 @@ and <code>archiveArtifacts</code></p></li></ul></div></section><section id="cont
       }
     }
   }
-}</code></pre></div></div></section><section id="continuous_integration_test_reports"><h2>Continuous Integration: Test reports</h2><div class="ulist"><ul><li><p>Sho the mvn "-fn" flag</p></li><li><p>Add the junit keyword</p></li><li><p>Show build going from "FAILED" to "UNSTABLE"</p></li></ul></div></section><section id="continuous_integration_correcting_tests"><h2>Continuous Integration: Correcting Tests</h2><div class="ulist"><ul><li><p>Make the build success</p><div class="ulist"><ul><li><p>Check Tests</p></li><li><p>Edit IT code / commit</p></li></ul></div></li></ul></div></section></section>
+  post {
+    success {
+      archiveArtifacts 'target/demoapp.jar'
+    }
+  }
+}</code></pre></div></div></section><section id="continuous_integration_exercise_all_tests_reports"><h2>Continuous Integration: Exercise - All Tests Reports</h2><div class="ulist"><ul><li><p>We now want <strong>all</strong> test reports published</p><div class="ulist"><ul><li><p><strong>Problem:</strong> how to handle Unit test failure ?</p></li></ul></div></li><li><p>We also want to archive artifacts if build is
+unstable <strong>only</strong> due to the <code>Verify</code> stage</p></li><li><p><em>Clues</em>: <code>post</code> can be used per stage</p></li></ul></div></section><section id="continuous_integration_solution_all_tests_reports"><h2>Continuous Integration: Solution - All Tests Reports</h2><div class="listingblock"><div class="content"><pre class="highlight"><code>pipeline {
+  agent {
+    node {
+      label 'maven'
+    }
+
+  }
+  stages {
+    stage('Build') {
+      steps {
+        sh 'mvn clean compile test package'
+      }
+    post {
+      always {
+      junit '**/target/surefire-reports/*.xml'
+    }
+    }
+    }
+    stage('Integration Tests') {
+      steps {
+        sh 'mvn verify -fn'
+    junit '**/target/failsafe-reports/*.xml'
+      }
+    post {
+    unstable {
+      archiveArtifacts 'target/demoapp.jar'
+    }
+    }
+    }
+  }
+  post {
+    success {
+      archiveArtifacts 'target/demoapp.jar'
+    }
+  }
+}</code></pre></div></div></section><section id="continuous_integration_failing_tests"><h2>Continuous Integration: Failing Tests</h2><div class="ulist"><ul><li><p>Validate your changes by making your tests fails.</p></li><li><p>Edit each one and uncomment the failing block:</p><div class="ulist"><ul><li><p>Integration: <code>src/master/src/test/java/hello/ApplicationIT.java</code></p></li><li><p>Unit Tests: <code>src/master/src/test/java/hello/ApplicationTest.java</code></p></li></ul></div></li><li><p>Browse the top-level items "Changes", "Tests" and "Artifacts"</p></li><li><p>Do <strong>NOT</strong> forget to correct your tests at the end</p></li></ul></div></section><section id="that_s_all_folks_2"><h2>That&#8217;s all folks !</h2></section></section>
 <section><section id="docker"><h2>Docker</h2><div class="paragraph"><p>to the Rescue</p></div></section><section id="docker_why"><h2>Docker: Why ?</h2></section><section id="docker_what"><h2>Docker: What ?</h2></section><section id="docker_how"><h2>Docker How ?</h2></section><section id="docker_dockerfile"><h2>Docker: Dockerfile</h2><div class="ulist"><ul><li><p>Dockerfile: recipe</p></li><li><p>Use Gitserver</p></li></ul></div></section><section id="docker_building_docker_image"><h2>Docker: Building Docker Image</h2><div class="ulist"><ul><li><p>Devbox</p></li><li><p>docker images</p></li><li><p>docker build</p></li><li><p>docker images</p></li></ul></div></section><section id="docker_running_docker_container"><h2>Docker: Running Docker Container</h2><div class="ulist"><ul><li><p>Devbox</p></li><li><p>docker run</p></li><li><p>docker ps</p></li><li><p>Access App</p></li></ul></div></section></section>
 <section><section id="continuous_delivery_with_jenkins"><h2>Continuous Delivery with Jenkins</h2></section><section id="continuous_delivery_why"><h2>Continuous Delivery: Why ?</h2></section><section id="continuous_delivery_what"><h2>Continuous Delivery: What ?</h2></section><section id="cd_is_not_continuous_deployment"><h2>CD is NOT Continuous Deployment</h2></section><section id="continuous_delivery_how"><h2>Continuous Delivery: How ?</h2></section><section id="continuous_delivery_target_environment"><h2>Continuous Delivery: Target Environment</h2><div class="ulist"><ul><li><p>OpenJDK JRE v8</p></li><li><p>Docker to the rescue</p></li><li><p>Artifacts: Docker image in the registry</p></li></ul></div></section><section id="continuous_delivery_generate_docker_image"><h2>Continuous Delivery: Generate Docker Image</h2></section><section id="continuous_delivery_delivery_to_docker_registry"><h2>Continuous Delivery: Delivery to Docker Registry</h2></section><section id="continuous_delivery_approval"><h2>Continuous Delivery: Approval</h2></section></section>
 <section><section id="improving_our_pipeline"><h2>Improving our Pipeline</h2></section><section id="parallelization"><h2>Parallelization</h2></section><section id="building_with_docker"><h2>Building with Docker</h2></section></section>
