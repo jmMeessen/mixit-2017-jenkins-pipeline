@@ -1,0 +1,22 @@
+
+= Speaker
+
+== Damien DUPORTAL
+
+[.right.text-center]
+image::{imagedir}/damien.jpg[height="400",float="left"]
+
+* Training Engineer @ CloudBees
+** Docker & Apple fanboy. Sorry
+** Human stack focused
+** Rock climber
+* Contact:
+** Twitter: link:https://twitter.com/DamienDuportal[@DamienDuportal]
+** Github: link:https://github.com/dduportal[dduportal]
+** Google: damien.duportal@gmail.com
+
+== CloudBees
+
+<sell>
+
+</sell>

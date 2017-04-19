@@ -1,0 +1,68 @@
+
+= Demo Application
+
+== Demo Application: Why ?
+
+* *Goal:* Illustrate a Software Supply Chain with a demo application
+* *Challenge:* So many languages/framework/toolchains
+* *Solution:*
+** Opinionated demo application (language, tooling, etc.)
+** A first practical exercise to put everyone on the same page
+
+== Demo Application: What ?
+
+* Web application
+* Says Greetings
+* Parameter based: changed content
+
+== Demo Application: How ?
+
+* Java
+* Maven
+* Spring Boot
+* Git
+* Docker
+
+== Demo Application: Check it
+
+* Access Gitserver
+* Browse files
+
+== Demo Application: Get it
+
+* Access Devbox
+* git clone
+* Check files again
+
+== Demo Application: Compile it
+
+* Devbox
+* Maven and java commands
+* mvn compile
+* Check target content
+
+== Demo Application: Unit-Test it
+
+* Devbox
+* mvn test
+* Check target content
+** Test reports for "surefire"
+
+== Demo Application: Package it
+
+* Devbox
+* mvn package
+* Check target content
+
+== Demo Application: Run it
+
+* Devbox
+* java -jar
+* Play with it locally
+
+== Demo Application: Integrate-Test it
+
+* Devbox
+* mvn verify => ERROR
+* Check target content:
+** Test reports for "failsafe"

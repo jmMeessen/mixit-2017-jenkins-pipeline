@@ -1,0 +1,21 @@
+= Continuous Delivery with Jenkins
+
+== Continuous Delivery: Why ?
+
+== Continuous Delivery: What ?
+
+== CD is NOT Continuous Deployment
+
+== Continuous Delivery: How ?
+
+== Continuous Delivery: Target Environment
+
+* OpenJDK JRE v8
+* Docker to the rescue
+* Artifacts: Docker image in the registry
+
+== Continuous Delivery: Generate Docker Image
+
+== Continuous Delivery: Delivery to Docker Registry
+
+== Continuous Delivery: Approval

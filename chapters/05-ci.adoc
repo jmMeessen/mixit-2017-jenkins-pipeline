@@ -1,0 +1,47 @@
+= Continuous Integration with Jenkins
+
+== Continuous Integration: Why ?
+
+== Continuous Integration: What ?
+
+== Continuous Integration: How ?
+
+== Continuous Integration: Accessing Jenkins
+
+* Jenkins
+* Log in butler/butler
+* BlueOcean
+
+== Continuous Integration: Creating Project
+
+* Create BO project
+* Configure Webhook on gogs
+* Go back to BO, check empty
+* Check with legacy GUI
+* Reference to jenkins.io documentation
+
+== Continuous Integration: BlueOcean Pipeline Editor
+
+* Open Pipeline Editor
+* Generate a stage hello world
+* Commit and push
+* See the first job
+
+== Continuous Integration: Simple Build Pipeline
+
+* Create compile -> unit test -> package -> Integration test
+* Agent is the maven agent. Show it, and then label.
+* We want to archive Artefact
+* See 4 steps, with integration test failing
+
+== Continuous Integration: Test reports
+
+* Sho the mvn "-fn" flag
+* Add the junit keyword
+* Show build going from "FAILED" to "UNSTABLE"
+
+== Continuous Integration: Correcting Tests
+
+* Make the build success
+** Check Tests
+** Edit IT code / commit
