@@ -1,7 +1,7 @@
 
-= Speaker
+= Hello
 
-== Damien DUPORTAL
+== Whoami: Damien DUPORTAL
 
 [.right.text-center]
 image::{imagedir}/damien.jpg[height="400",float="left"]
@@ -19,4 +19,18 @@ image::{imagedir}/damien.jpg[height="400",float="left"]
 
 <sell>
 
+* Software at the Speed of Ideas
+* Hub of "Enterprise Jenkins and DevOps"
+* We provide:
+** Jenkins "Enterprise" Distribution
+** Services around Jenkins
+
 </sell>
+
+== Who are you ?
+
+== Let's Get Started
+
+* Access your instance homepage:
++
+link:http://localhost:10000[]

@@ -23,13 +23,20 @@
 // Here are the chapters
 :leveloffset: +1
 
-include::chapters/01-speakers.adoc[]
-include::chapters/02-motivations.adoc[]
-include::chapters/03-jenkins-project.adoc[]
+include::chapters/01-motivations.adoc[]
+
+include::chapters/02-jenkins-project.adoc[]
+
+include::chapters/03-hello.adoc[]
+
 include::chapters/04-demoapp.adoc[]
+
 include::chapters/05-ci.adoc[]
+
 include::chapters/06-docker.adoc[]
+
 include::chapters/07-cd.adoc[]
+
 include::chapters/08-improving-our-pipeline.adoc[]
 
 :leveloffset: -1
