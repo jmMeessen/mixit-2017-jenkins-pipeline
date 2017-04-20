@@ -5,4 +5,4 @@ services:
     image: astefanutti/decktape
     volumes:
     - ./docs:/docs
-    command: /docs/index.html /docs/slides.pdf
+    command: /docs/slides.html /docs/slides.pdf
