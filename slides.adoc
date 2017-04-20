@@ -6,7 +6,7 @@
 :idprefix:
 :imagedir: ./images
 :revealjsdir: https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.4.1
-:revealjs_theme: sky
+:revealjs_theme: beige
 :revealjs_history: true
 :revealjs_margin: 0.1
 :revealjs_width: 1280
