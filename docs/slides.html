@@ -440,7 +440,74 @@ and the node allocation</p></li></ul></div></li><li><p><em>Clues:</em> Keyword <
       archiveArtifacts 'target/demoapp.jar'
     }
   }
-}</code></pre></div></div></section><section id="cd_exercise_scaling_pipeline"><h2>CD: Exercise - Scaling Pipeline</h2><div class="ulist"><ul><li><p><strong>Goal:</strong></p></li></ul></div></section><section id="that_s_all_folks_3"><h2>That&#8217;s all folks !</h2></section></section>
+}</code></pre></div></div></section><section id="cd_exercise_scaling_pipeline"><h2>CD: Exercise - Scaling Pipeline</h2><div class="ulist"><ul><li><p><strong>Goal:</strong> Share Pipeline across your teams</p></li><li><p>We want to use
+<strong><a href="https://jenkins.io/doc/book/pipeline/shared-libraries/">Shared Libraries</a></strong></p></li><li><p>There is one autoconfigured named <code>deploy</code></p></li><li><p>Use the annotation to load the Library, on master branch</p></li><li><p>Check the library
+<a href="https://github.com/oufti-playground/example-voting-app/blob/master/vars/deploy.groovy">here</a></p></li></ul></div></section><section id="cd_solution_scaling_pipeline"><h2>CD: Solution - Scaling Pipeline</h2><div class="listingblock"><div class="content"><pre class="highlight"><code>@Library('deploy@master') _
+
+pipeline {
+  agent {
+	label 'docker'
+	}
+  stages {
+    stage('Build') {
+      agent {
+        dockerfile {
+          filename 'Dockerfile.build'
+        }
+      }
+      steps {
+        sh 'mvn clean compile test package'
+        stash(name: 'app', includes: 'target/demoapp.jar')
+      }
+      post {
+        always {
+          junit '**/target/surefire-reports/*.xml'
+        }
+      }
+    }
+    stage('Tests') {
+      steps {
+        parallel (
+          "Integration Tests": {
+            script {
+              node('maven') {
+                sh 'mvn verify -fn'
+                junit '**/target/failsafe-reports/*.xml'
+              }
+            }
+          },
+          "Docker": {
+            script {
+              node('docker') {
+                unstash 'app'
+                sh 'docker build -t demoapp:latest ./'
+              }
+            }
+          }
+        )
+      }
+      post {
+        unstable {
+          archiveArtifacts 'target/demoapp.jar'
+        }
+      }
+    }
+    stage('Deploy') {
+      agent {
+        label 'docker'
+      }
+      steps {
+        deploy 'demoapp'
+        echo 'Delivery Done !'
+      }
+    }
+  }
+  post {
+    success {
+      archiveArtifacts 'target/demoapp.jar'
+    }
+  }
+}</code></pre></div></div></section><section id="that_s_all_folks_3"><h2>That&#8217;s all folks !</h2></section></section>
 <section id="thank_you"><h2>Thank You !</h2><div class="ulist"><ul><li><p>Mix-IT organization</p></li><li><p>CloudBees and Jenkins Community</p></li><li><p>YOU</p></li></ul></div></section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.4.1/lib/js/head.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.4.1/js/reveal.js"></script><script>// See https://github.com/hakimel/reveal.js#configuration for a full list of configuration options
 Reveal.initialize({
   // Display controls in the bottom right corner

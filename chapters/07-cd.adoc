@@ -391,6 +391,84 @@ pipeline {
 
 == CD: Exercise - Scaling Pipeline
 
-* *Goal:*
+* *Goal:* Share Pipeline across your teams
+* We want to use
+*link:https://jenkins.io/doc/book/pipeline/shared-libraries/[Shared Libraries]*
+* There is one autoconfigured named `deploy`
+* Use the annotation to load the Library, on master branch
+* Check the library
+link:https://github.com/oufti-playground/example-voting-app/blob/master/vars/deploy.groovy[here]
+
+== CD: Solution - Scaling Pipeline
+
+[source,subs="attributes",java]
+----
+@Library('deploy@master') _
+
+pipeline {
+  agent {
+	label 'docker'
+	}
+  stages {
+    stage('Build') {
+      agent {
+        dockerfile {
+          filename 'Dockerfile.build'
+        }
+      }
+      steps {
+        sh 'mvn clean compile test package'
+        stash(name: 'app', includes: 'target/demoapp.jar')
+      }
+      post {
+        always {
+          junit '**/target/surefire-reports/*.xml'
+        }
+      }
+    }
+    stage('Tests') {
+      steps {
+        parallel (
+          "Integration Tests": {
+            script {
+              node('maven') {
+                sh 'mvn verify -fn'
+                junit '**/target/failsafe-reports/*.xml'
+              }
+            }
+          },
+          "Docker": {
+            script {
+              node('docker') {
+                unstash 'app'
+                sh 'docker build -t demoapp:latest ./'
+              }
+            }
+          }
+        )
+      }
+      post {
+        unstable {
+          archiveArtifacts 'target/demoapp.jar'
+        }
+      }
+    }
+    stage('Deploy') {
+      agent {
+        label 'docker'
+      }
+      steps {
+        deploy 'demoapp'
+        echo 'Delivery Done !'
+      }
+    }
+  }
+  post {
+    success {
+      archiveArtifacts 'target/demoapp.jar'
+    }
+  }
+}
+----
 
 == That's all folks !
