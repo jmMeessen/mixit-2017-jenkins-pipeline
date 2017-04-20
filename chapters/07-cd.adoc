@@ -222,7 +222,8 @@ pipeline {
       }
       steps {
         input 'Is it OK to deploy demoapp ?'
-        sh "docker push localhost:5000/demoapp:latest"
+        sh 'docker tag demoapp localhost:5000/demoapp:latest'
+        sh 'docker push localhost:5000/demoapp:latest'
       }
     }
   }
@@ -297,7 +298,8 @@ pipeline {
       }
       steps {
         input 'Is it OK to deploy demoapp ?'
-        sh "docker push localhost:5000/demoapp:latest"
+        sh 'docker tag demoapp localhost:5000/demoapp:latest'
+        sh 'docker push localhost:5000/demoapp:latest'
       }
     }
   }
@@ -374,7 +376,8 @@ pipeline {
       }
       steps {
         input 'Is it OK to deploy demoapp ?'
-        sh "docker push localhost:5000/demoapp:latest"
+        sh 'docker tag demoapp localhost:5000/demoapp:latest'
+        sh 'docker push localhost:5000/demoapp:latest'
       }
     }
   }
@@ -385,5 +388,9 @@ pipeline {
   }
 }
 ----
+
+== CD: Exercise - Scaling Pipeline
+
+* *Goal:*
 
 == That's all folks !
