@@ -68,12 +68,12 @@ docker run -P -d my_image:1.0.0
 
 * Using *Devbox*, from the local repository root
 ** Check running containers with `docker ps`
-** Run the image with this command:
+** Run and test the container with this command:
 +
 [source,subs="attributes",bash]
 ----
-docker run -p 8080:8080 -d my_image:1.0.0
+docker run -p 10081:8080 -d my_image:1.0.0
+# Then open http://localhost:10081
 ----
 
-** Test it
 ** Stop it with `docker stop <Container ID>`

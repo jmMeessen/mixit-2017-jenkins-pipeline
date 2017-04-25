@@ -87,7 +87,7 @@ pipeline {
         sh 'docker build -t demoapp:latest ./'
       }
     }
-    stage('Integration Tests') {
+    stage('Verify') {
       steps {
         sh 'mvn verify -fn'
         junit '**/target/failsafe-reports/*.xml'
@@ -145,7 +145,7 @@ pipeline {
         sh '/usr/local/bin/bats ./src/test/bats/docker.bats'
       }
     }
-    stage('Integration Tests') {
+    stage('Verify') {
       steps {
         sh 'mvn verify -fn'
         junit '**/target/failsafe-reports/*.xml'
@@ -196,16 +196,16 @@ pipeline {
         }
       }
     }
-    stage('Docker Build') {
+    stage('Docker') {
       agent {
         label 'docker'
       }
       steps {
         unstash 'app'
-        sh 'docker build -t demoapp:latest ./'
+        sh '/usr/local/bin/bats ./src/test/bats/docker.bats'
       }
     }
-    stage('Integration Tests') {
+    stage('Verify') {
       steps {
         sh 'mvn verify -fn'
         junit '**/target/failsafe-reports/*.xml'
@@ -267,16 +267,16 @@ pipeline {
         }
       }
     }
-    stage('Docker Build') {
+    stage('Docker') {
       agent {
         label 'docker'
       }
       steps {
         unstash 'app'
-        sh 'docker build -t demoapp:latest ./'
+        sh '/usr/local/bin/bats ./src/test/bats/docker.bats'
       }
     }
-    stage('Integration Tests') {
+    stage('Verify') {
       agent {
         dockerfile {
           filename 'Dockerfile.build'
@@ -358,7 +358,7 @@ pipeline {
             script {
               node('docker') {
                 unstash 'app'
-                sh 'docker build -t demoapp:latest ./'
+                sh '/usr/local/bin/bats ./src/test/bats/docker.bats'
               }
             }
           }
@@ -441,7 +441,7 @@ pipeline {
             script {
               node('docker') {
                 unstash 'app'
-                sh 'docker build -t demoapp:latest ./'
+                sh '/usr/local/bin/bats ./src/test/bats/docker.bats'
               }
             }
           }

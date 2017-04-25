@@ -52,14 +52,14 @@ image::./images/ci-howto.png[caption=CI,width=400]
 ** Stored in *Git*
 ** Fetch URL from the *Gitserver*
 *** Direct link: link:http://localhost:10000/gitserver/butler/demoapp.git[]
-** Add a *User/password* credential
-*** `butler` / same for password
+** Add a *User/password* credential (`butler` / `butler`)
+** Pipeline is empty (for now): no `Jenkinsfile`
 
 == CI: Fast feedback with Webhooks
 
 * We want *Fast feedback* !
 ** Pushed code to repository ? Tell Jenkins to build it *now*
-* Let's add a *Webhook* to the repository
+* Let's use *Webhook* to the repository
 ** HTTP request *Gitserver* -> *Jenkins*
 
 == CI: Add a Gogs Webhooks
@@ -97,7 +97,7 @@ image::./images/ci-howto.png[caption=CI,width=400]
 link:http://localhost:10000/jenkins/blue/organizations/jenkins/pipeline-editor/[]
 ** Use `CTRL + S` (On Mac: `CMD +S`) to switch to textual version
 
-* Use also the Legacy Pipeline Syntax Snippet Generator:
+* Also, use the "Legacy" Pipeline Syntax Snippet Generator:
 ** link:http://localhost:10000/jenkins/job/demoapp/pipeline-syntax/[]
 
 == CI: Exercise - Your First Pipeline
@@ -158,7 +158,7 @@ pipeline {
         sh 'mvn package'
       }
     }
-    stage('Integration Tests') {
+    stage('Verify') {
       steps {
         sh 'mvn verify'
       }
@@ -196,7 +196,7 @@ pipeline {
         sh 'mvn clean compile test package'
       }
     }
-    stage('Integration Tests') {
+    stage('Verify') {
       steps {
         sh 'mvn verify'
       }
@@ -238,7 +238,7 @@ pipeline {
         sh 'mvn clean compile test package'
       }
     }
-    stage('Integration Tests') {
+    stage('Verify') {
       steps {
         sh 'mvn verify -fn'
         junit '**/target/failsafe-reports/*.xml'
@@ -272,29 +272,28 @@ pipeline {
     node {
       label 'maven'
     }
-
   }
   stages {
     stage('Build') {
       steps {
         sh 'mvn clean compile test package'
       }
-    post {
-      always {
-      junit '**/target/surefire-reports/*.xml'
+      post {
+        always {
+          junit '**/target/surefire-reports/*.xml'
+        }
+      }
     }
-    }
-    }
-    stage('Integration Tests') {
+    stage('Verify') {
       steps {
         sh 'mvn verify -fn'
-    junit '**/target/failsafe-reports/*.xml'
+        junit '**/target/failsafe-reports/*.xml'
       }
-    post {
-    unstable {
-      archiveArtifacts 'target/demoapp.jar'
-    }
-    }
+      post {
+        unstable {
+          archiveArtifacts 'target/demoapp.jar'
+        }
+      }
     }
   }
   post {
