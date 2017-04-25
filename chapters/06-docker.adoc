@@ -72,8 +72,9 @@ docker run -P -d my_image:1.0.0
 +
 [source,subs="attributes",bash]
 ----
-docker run -p 10081:8080 -d my_image:1.0.0
-# Then open http://localhost:10081
+docker run -p {demo-docker-port}:8080 -d my_image:1.0.0
+# Then open http://{external-domain}:{demo-docker-port}[]
+
 ----
 
 ** Stop it with `docker stop <Container ID>`

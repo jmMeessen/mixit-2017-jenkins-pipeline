@@ -29,12 +29,12 @@
 == Demo Application: Access it
 
 * Open the local *GitServer*:
-** link:http://localhost:10000/gitserver[]
+** link:{gitserver-url}[]
 * *Sign In* using the top-right button
 ** User is `butler`, same for the password
 * Browse to the repository. Either:
 ** Click on *Explore* -> *butler/demoapp*
-** or direct link: link:http://localhost:10000/gitserver/butler/demoapp[]
+** or direct link: link:{gitserver-url}/butler/demoapp[]
 
 == Demo Application: Check it
 
@@ -46,7 +46,7 @@
 == Demo Application: Get it
 
 * Open the *DevBox*, the Web based command line:
-** link:http://localhost:10000/devbox[]
+** link:{devbox-url}[]
 ** WebSockets must be authorized
 * Copy the demoapp repository URL from *GitServer*
 * Run the following commands:
@@ -54,7 +54,7 @@
 [source,subs="attributes",bash]
 ----
 # Get the git repository
-git clone http://localhost:10000/gitserver/butler/demoapp.git
+git clone {gitserver-url}/butler/demoapp.git
 # Browse to the local repository
 cd ./demoapp
 # Check source code
@@ -144,8 +144,8 @@ ls -lrh ./target/
 ----
 java -jar ./target/demoapp.jar
 ----
-* Check the application on the 10080 port:
-** link:http://localhost:10080[]
+* Check the application on the {demo-metal-port} port:
+** link:http://{external-domain}:{demo-metal-port}[]
 
 == Demo Application: A note about Tests
 

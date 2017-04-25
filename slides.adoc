@@ -15,6 +15,16 @@
 :revealjs_maxscale: 1.5
 :revealjs_slideNumber: true
 :revealjs_controls: true
+:box-name: mixit2017-jenkins
+:external-domain: localhost
+:external-port: 10000
+:demo-metal-port: 10080
+:demo-docker-port: 10081
+:homepage-url: http://{external-domain}:{external-port}
+:jenkins-url: {homepage-url}/jenkins
+:devbox-url: {homepage-url}/devbox
+:gitserver-url: {homepage-url}/gitserver
+
 
 = Jenkins Moderne et Livraison Continue
 

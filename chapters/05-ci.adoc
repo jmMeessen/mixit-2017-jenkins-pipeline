@@ -36,14 +36,14 @@ image::./images/ci-howto.png[caption=CI,width=400]
 == CI: Accessing Jenkins
 
 * Access your Jenkins instance:
-** link:http://localhost:10000/jenkins[]
+** link:{jenkins-url}[]
 ** *Log in*  as the user *`butler`* (password is the same)
 ** It is the "Legacy UI"
 
 == CI: Jenkins BlueOcean
 
 * Switch to BlueOcean, the new UI
-** Direct link: link:http://localhost:10000/jenkins/blue[]
+** Direct link: link:{jenkins-url}/blue[]
 ** _Or_ click on the top button "Open Blue Ocean"
 
 == CI: Creating Project
@@ -51,7 +51,7 @@ image::./images/ci-howto.png[caption=CI,width=400]
 * Create your 1st Pipeline:
 ** Stored in *Git*
 ** Fetch URL from the *Gitserver*
-*** Direct link: link:http://localhost:10000/gitserver/butler/demoapp.git[]
+*** Direct link: link:{gitserver-url}/butler/demoapp.git[]
 ** Add a *User/password* credential (`butler` / `butler`)
 ** Pipeline is empty (for now): no `Jenkinsfile`
 
@@ -65,9 +65,9 @@ image::./images/ci-howto.png[caption=CI,width=400]
 == CI: Add a Gogs Webhooks
 
 * From repo. in *Gitserver* -> *Settings* -> *Webhooks*
-** Direct link: http://localhost:10000/gitserver/butler/demoapp/settings/hooks
+** Direct link: {gitserver-url}/butler/demoapp/settings/hooks
 * Add a *Gogs* webhook:
-** Payload URL: link:http://localhost:10000/jenkins/job/demoapp/build?delay=0[]
+** Payload URL: link:{jenkins-url}/job/demoapp/build?delay=0[]
 ** When should this webhook be triggered?: *I need everything*
 
 == CI: Starting with Pipelines
@@ -94,11 +94,11 @@ image::./images/ci-howto.png[caption=CI,width=400]
 
 * Let's *hack*: open the *BlueOcean Pipeline Editor*
 ** Direct (hidden) URL:
-link:http://localhost:10000/jenkins/blue/organizations/jenkins/pipeline-editor/[]
+link:{jenkins-url}/blue/organizations/jenkins/pipeline-editor/[]
 ** Use `CTRL + S` (On Mac: `CMD +S`) to switch to textual version
 
 * Also, use the "Legacy" Pipeline Syntax Snippet Generator:
-** link:http://localhost:10000/jenkins/job/demoapp/pipeline-syntax/[]
+** link:{jenkins-url}/job/demoapp/pipeline-syntax/[]
 
 == CI: Exercise - Your First Pipeline
 
@@ -107,7 +107,7 @@ link:http://localhost:10000/jenkins/blue/organizations/jenkins/pipeline-editor/[
 * This stage have 1 step that prints the message "Hello World"
 * Copy/Paste this Pipeline in a new file `Jenkinsfile` on the repository root
 * A build will kick off immediately:
-** link:http://localhost:10000/jenkins/blue/organizations/jenkins/demoapp/activity[demoapp Activity Dashboard]
+** link:{jenkins-url}/blue/organizations/jenkins/demoapp/activity[demoapp Activity Dashboard]
 
 == CI: Solution - Your first pipeline
 

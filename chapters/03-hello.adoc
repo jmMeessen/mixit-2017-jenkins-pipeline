@@ -29,8 +29,41 @@ image::{imagedir}/damien.jpg[height="400",float="left"]
 
 == Who are you ?
 
+== Requirements
+
+* VirtualBox >= 5.1.18
+* Vagrant >= 1.9.1
+* From a Terminal, download the VM (1 time, ~1Gb):
++
+[source,subs="attributes",bash]
+----
+vagrant box add {box-name} \
+  https://github.com/oufti-playground/lab-vm/releases/download/mixit-2017/jenkins-lab-demo.box
+----
+
+* Initialize the VM project:
++
+[source,subs="attributes",bash]
+----
+mkdir {box-name}
+cd {box-name}
+vagrant init -m -f {box-name}
+----
+
+
 == Let's Get Started
+
+* Start the VM from the {box-name} folder:
++
+[source,subs="attributes",bash]
+----
+$ ls
+  Vagrantfile
+$ pwd
+  .../{box-name}
+$ vagrant up
+----
 
 * Access your instance homepage:
 +
-link:http://localhost:10000[]
+link:{homepage-url}[]
